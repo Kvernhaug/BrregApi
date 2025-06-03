@@ -1,0 +1,6 @@
+@BrregApi_HostAddress = http://localhost:5270
+
+GET {{BrregApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
