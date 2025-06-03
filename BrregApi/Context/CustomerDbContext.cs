@@ -6,5 +6,8 @@ namespace BrregApi.Context
     public class CustomerDbContext(DbContextOptions<CustomerDbContext> options) : DbContext(options)
     {
         public DbSet<Customer> Customers => Set<Customer>();
+        public DbSet<Company> Companies => Set<Company>();
+        public DbSet<Address> Addresses => Set<Address>();
+        public DbSet<OrganizationType> OrganizationTypes => Set<OrganizationType>();
     }
 }
