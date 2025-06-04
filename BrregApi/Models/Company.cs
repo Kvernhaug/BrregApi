@@ -12,8 +12,6 @@
 
         public string? Email { get; set; }
 
-        public string? Note { get; set; }
-
         public int? AddressId { get; set; }
         public Address? Address { get; set; }
 
@@ -34,9 +32,6 @@
 
             if (updated.Email != null)
                 Email = updated.Email;
-
-            if (updated.Note != null)
-                Note = updated.Note;
 
             if (updated.Address != null)
             {

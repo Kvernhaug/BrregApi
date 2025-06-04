@@ -4,6 +4,7 @@ using BrregApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace BrregApi.Controllers
 {
@@ -37,7 +38,7 @@ namespace BrregApi.Controllers
         //    },
         //};
 
-        [HttpGet(Name = "GetAllCustomers")]
+        [HttpGet("all", Name = "GetAllCustomers")]
         public async Task<ActionResult<List<Customer>>> GetAllCustomers()
         {
             return Ok(await _context.Customers.ToListAsync());
@@ -54,7 +55,7 @@ namespace BrregApi.Controllers
             return Ok(customer);
         }
 
-        [HttpPost]
+        [HttpPost("add")]
         public async Task<ActionResult<Customer>> AddCustomer(Customer newCustomer)
         {
             if (newCustomer is null)
@@ -71,7 +72,7 @@ namespace BrregApi.Controllers
             return CreatedAtAction(nameof(GetCustomerById), new { id = newCustomer.Id }, newCustomer);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("/update/{id}")]
         public async Task<IActionResult> UpdateCustomerAsync(int id, Customer updatedCustomer)
         {
             var customer = await _context.Customers.FindAsync(id);
@@ -85,7 +86,7 @@ namespace BrregApi.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteCustomerAsync(int id)
         {
             var customer = await _context.Customers.FindAsync(id);
@@ -98,5 +99,29 @@ namespace BrregApi.Controllers
             
             return NoContent();
         }
+
+        [HttpGet("filter")]
+        public async Task<ActionResult<List<Customer>>> GetMatchingCustomers(
+                [FromQuery] string? note,
+                [FromQuery] string? companyName,
+                [FromQuery] string? street,
+                [FromQuery] string? postalCode,
+                [FromQuery] string? region,
+                [FromQuery] string? municipality,
+                [FromQuery] string? municipalityNumber,
+                [FromQuery] string? organizationType
+            )
+        {
+            if (!string.IsNullOrWhiteSpace(note))
+            {
+                var results = await context.Customers
+                    .Where(c => c.Note != null && c.Note.Contains(note))
+                    .ToListAsync();
+            }
+            
+
+            return Ok();
+        }
+
     }
 }
