@@ -18,8 +18,6 @@
 
         public string? MunicipalityNumber { get; set; }
 
-        public required Company Company { get; set; }
-
 
         public void UpdateAddress(Address updatedAddress)
         {

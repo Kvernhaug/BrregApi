@@ -41,13 +41,14 @@ namespace BrregApi.Controllers
         [HttpGet("all", Name = "GetAllCustomers")]
         public async Task<ActionResult<List<Customer>>> GetAllCustomers()
         {
-            return Ok(await _context.Customers.ToListAsync());
+            var customers = await _context.GetAllCustomers().ToListAsync();
+            return Ok(customers);
         }
 
         [HttpGet("{id}", Name = "GetCustomerById")]
         public async Task<ActionResult<Customer>> GetCustomerById(int id)
         {
-            var customer = await _context.Customers.FindAsync(id);
+            var customer = await _context.GetCustomerById(id);
             if (customer is null)
             {
                 return NotFound();
@@ -66,6 +67,19 @@ namespace BrregApi.Controllers
             {
                 return BadRequest("Customer must have a valid Company object.");
             }
+
+            // Ignore any ids provided in request body
+            newCustomer.Id = 0;
+            newCustomer.Company.Id = 0;
+            if (newCustomer.Company.Address is not null)
+            {
+                newCustomer.Company.Address.Id = 0;
+            }
+            if (newCustomer.Company.OrganizationType is not null)
+            {
+                newCustomer.Company.OrganizationType.Id = 0;
+            }
+
             _context.Customers.Add(newCustomer);
             await _context.SaveChangesAsync();
 

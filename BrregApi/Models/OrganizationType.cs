@@ -8,8 +8,6 @@
 
         public string? Description { get; set; }
 
-        public required Company Company { get; set; }
-
 
         public void UpdateOrganizationType(OrganizationType updated)
         {
