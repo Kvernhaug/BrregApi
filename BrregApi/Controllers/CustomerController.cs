@@ -96,22 +96,48 @@ namespace BrregApi.Controllers
                 [FromQuery] string? companyName,
                 [FromQuery] string? street,
                 [FromQuery] string? postalCode,
-                [FromQuery] string? region,
-                [FromQuery] string? municipality,
-                [FromQuery] string? municipalityNumber,
-                [FromQuery] string? organizationType
+                [FromQuery] string? region
             )
         {
-            if (!string.IsNullOrWhiteSpace(note))
+            var query = _context.Customers
+                .Include(c => c.Company)
+                    .ThenInclude(co => co.Address)
+                .Include(c => c.Company.OrganizationType)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(note))
             {
-                var results = await context.Customers
-                    .Where(c => c.Note != null && c.Note.Contains(note))
-                    .ToListAsync();
+                query = query.Where(c => c.Note != null && c.Note.Contains(note));
             }
-            
 
-            return Ok();
+            if (!string.IsNullOrEmpty(companyName))
+            {
+                query = query.Where(c => c.Company.Name != null && c.Company.Name.Contains(companyName));
+            }
+
+            if (!string.IsNullOrEmpty(street))
+            {
+                query = query.Where(c => c.Company.Address != null &&
+                                         c.Company.Address.Street != null &&
+                                         c.Company.Address.Street.Any(s => s.Contains(street)));
+            }
+
+            if (!string.IsNullOrEmpty(postalCode))
+            {
+                query = query.Where(c => c.Company.Address != null &&
+                                         c.Company.Address.PostalCode != null &&
+                                         c.Company.Address.PostalCode.Contains(postalCode));
+            }
+
+            if (!string.IsNullOrEmpty(region))
+            {
+                query = query.Where(c => c.Company.Address != null &&
+                                         c.Company.Address.Region != null &&
+                                         c.Company.Address.Region.Contains(region));
+            }
+
+            var result = await query.ToListAsync();
+            return Ok(result);
         }
-
     }
 }
