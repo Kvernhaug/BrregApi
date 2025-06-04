@@ -14,30 +14,6 @@ namespace BrregApi.Controllers
     {
         private readonly CustomerDbContext _context = context;
 
-        //static private List<Customer> customers = new List<Customer>
-        //{
-        //    new Customer
-        //    {
-        //        Id = 1,
-        //        Company = new Company
-        //        {
-        //            Id = 1,
-        //            Name = "Bedrift 1",
-        //            OrgNumber = "123456789"
-        //        }
-        //    },
-        //    new Customer
-        //    {
-        //        Id = 2,
-        //        Company = new Company
-        //        {
-        //            Id = 2,
-        //            Name = "Bedrift 2",
-        //            OrgNumber = "223456789"
-        //        }
-        //    },
-        //};
-
         [HttpGet("all", Name = "GetAllCustomers")]
         public async Task<ActionResult<List<Customer>>> GetAllCustomers()
         {
@@ -86,10 +62,10 @@ namespace BrregApi.Controllers
             return CreatedAtAction(nameof(GetCustomerById), new { id = newCustomer.Id }, newCustomer);
         }
 
-        [HttpPut("/update/{id}")]
-        public async Task<IActionResult> UpdateCustomerAsync(int id, Customer updatedCustomer)
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateCustomerAsync(Customer updatedCustomer)
         {
-            var customer = await _context.Customers.FindAsync(id);
+            var customer = await _context.Customers.FindAsync(updatedCustomer.Id);
             if (customer is null)
             {
                 return NotFound();
@@ -97,7 +73,7 @@ namespace BrregApi.Controllers
             customer.UpdateCustomer(updatedCustomer);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(updatedCustomer);
         }
 
         [HttpDelete("delete/{id}")]
