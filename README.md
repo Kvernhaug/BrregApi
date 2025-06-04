@@ -16,3 +16,29 @@
 - Run project using `dotnet run --launch-profile https`
 - Api can be accesed at https://localhost:7128
 - OpenApi Scalar interface available at https://localhost:7128/scalar/v1
+
+## Project Structure
+
+```
+└── 📁BrregApi
+    └── 📁Context
+        └── CustomerDbContext.cs
+    └── 📁Controllers
+        └── CustomerController.cs
+        └── WeatherForecastController.cs
+    └── 📁Models
+        └── Address.cs
+        └── Company.cs
+        └── Customer.cs
+        └── OrganizationType.cs
+    └── 📁Properties
+        └── launchSettings.json
+    └── appsettings.Development.json
+    └── appsettings.json
+    └── BrregApi.csproj
+    └── BrregApi.csproj.user
+    └── BrregApi.http
+    └── BrregApi.sln
+    └── Program.cs
+    └── WeatherForecast.cs
+```
